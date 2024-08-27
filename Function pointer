@@ -1,0 +1,89 @@
+Function pointer (con trỏ hàm) là một công cụ mạnh mẽ trong lập trình C/C++ và nhiều ngôn ngữ khác. Nó cho phép bạn lưu trữ địa chỉ của một hàm trong một biến và sau đó gọi hàm đó thông qua biến này. Dưới đây là một số mục đích chính khi sử dụng function pointer:
+
+1. Gọi hàm động (Dynamic Function Call)
+Con trỏ hàm cho phép bạn chọn và gọi một hàm tại thời điểm chạy (runtime), thay vì xác định hàm cần gọi tại thời điểm biên dịch (compile time). Điều này rất hữu ích trong các trường hợp mà hàm cần gọi chỉ được xác định trong quá trình thực thi.
+
+~~~c++
+void (*funcPtr)();
+
+void sayHello() {
+    printf("Hello!\n");
+}
+
+
+funcPtr = sayHello;
+funcPtr(); // Gọi hàm sayHello thông qua con trỏ hàm
+2. Tạo callback và xử lý sự kiện (Event Handling)
+Con trỏ hàm thường được sử dụng để cài đặt các hàm callback, nơi một hàm được truyền dưới dạng đối số cho một hàm khác và được gọi lại tại một thời điểm thích hợp.
+
+cpp
+Copy code
+void onEvent(void (*callback)()) {
+    // Một sự kiện xảy ra
+    callback(); // Gọi lại hàm được chỉ định
+}
+
+void myCallback() {
+    printf("Event handled!\n");
+}
+
+int main() {
+    onEvent(myCallback);
+    return 0;
+}
+~~~
+
+
+3. Triển khai chiến lược hoặc hành vi khác nhau (Strategy Pattern)
+Function pointer cho phép bạn chọn một hàm cụ thể để thực thi từ một tập hợp các hàm có thể. Điều này rất hữu ích trong các mô hình thiết kế như Strategy Pattern, nơi bạn có thể thay đổi thuật toán đang sử dụng mà không cần thay đổi mã gọi thuật toán đó.
+
+~~~
+int add(int a, int b) {
+    return a + b;
+}
+
+int multiply(int a, int b) {
+    return a * b;
+}
+
+int executeOperation(int (*operation)(int, int), int x, int y) {
+    return operation(x, y);
+}
+
+int main() {
+    int result1 = executeOperation(add, 5, 3);       // Kết quả là 8
+    int result2 = executeOperation(multiply, 5, 3);  // Kết quả là 15
+    return 0;
+}
+
+~~~
+
+4. Tạo bảng hàm (Function Tables)
+Con trỏ hàm có thể được sử dụng để tạo các bảng hàm, nơi các hàm khác nhau được lưu trữ trong một mảng hoặc danh sách. Điều này thường được dùng trong các trường hợp như xây dựng trình biên dịch hoặc máy ảo.
+
+~~~c++
+typedef int (*operationFunc)(int, int);
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int subtract(int a, int b) {
+    return a - b;
+}
+
+operationFunc operations[2] = { add, subtract };
+
+int main() {
+    int result = operations[0](10, 5); // Gọi hàm add qua bảng hàm
+    return 0;
+}
+~~~
+
+5. Tối ưu hóa mã (Code Optimization)
+Sử dụng function pointer có thể giúp giảm thiểu sự lặp lại trong mã, đặc biệt là khi nhiều hàm có giao diện tương tự và chỉ khác nhau ở một vài chi tiết.
+
+6. Đa hình trong C (Polymorphism in C)
+Function pointer cũng được sử dụng để mô phỏng tính đa hình (polymorphism) trong C, giúp các cấu trúc dữ liệu hoặc đối tượng có thể có hành vi khác nhau dựa trên con trỏ hàm mà chúng lưu trữ.
+
+Như vậy, function pointer là một công cụ rất linh hoạt, cho phép bạn viết mã linh hoạt, có thể mở rộng và dễ dàng bảo trì hơn.
